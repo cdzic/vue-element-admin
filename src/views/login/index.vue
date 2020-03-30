@@ -13,11 +13,11 @@
         <h3 class="title">
           {{ $t('login.title') }}
         </h3>
-        <lang-select class="set-language" />
+        <lang-select class="set-language"/>
       </div>
       <el-form-item ref="dragVerifySize" prop="username">
         <span class="svg-container">
-          <svg-icon icon-class="user" />
+          <svg-icon icon-class="user"/>
         </span>
         <el-input
           ref="username"
@@ -33,7 +33,7 @@
       <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
         <el-form-item prop="password">
           <span class="svg-container">
-            <svg-icon icon-class="password" />
+            <svg-icon icon-class="password"/>
           </span>
           <el-input
             :key="passwordType"
@@ -49,7 +49,7 @@
             @keyup.enter.native="handleLogin"
           />
           <span class="show-pwd" @click="showPwd">
-            <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+            <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"/>
           </span>
         </el-form-item>
       </el-tooltip>
@@ -108,171 +108,171 @@
       <br>
       <br>
       <br>
-      <social-sign />
+      <social-sign/>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
-import LangSelect from '@/components/LangSelect'
-import SocialSign from './components/SocialSignin'
-import DragVerify from 'vue-drag-verify'
+  import {validUsername} from '@/utils/validate'
+  import LangSelect from '@/components/LangSelect'
+  import SocialSign from './components/SocialSignin'
+  import DragVerify from 'vue-drag-verify'
 
-export default {
-  name: 'Login',
-  components: { LangSelect, SocialSign, DragVerify },
-  data() {
-    const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
-      } else {
-        callback()
-      }
-    }
-    const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
-      } else {
-        callback()
-      }
-    }
-    return {
-      loginForm: {
-        username: 'admin',
-        password: '111111'
-      },
-      loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
-      },
-      passwordType: 'password',
-      capsTooltip: false,
-      loading: false,
-      showDialog: false,
-      redirect: undefined,
-      otherQuery: {},
-      //  以下为drag-verify配置
-      width: 1,
-      height: 1,
-      text: '请将滑块拖动到右侧',
-      successText: '验证成功',
-      background: '#DDDDDD',
-      progressBarBg: '#76C61D',
-      completedBg: '#76C61D',
-      handlerBg: 'white',
-      handlerIcon: 'el-icon-arrow-right',
-      textSize: '14',
-      successIcon: 'el-icon-circle-check',
-      getShape: false,
-      color: 'white',
-      borderRadius: '5px'
-    }
-  },
-  watch: {
-    $route: {
-      handler: function(route) {
-        const query = route.query
-        if (query) {
-          this.redirect = query.redirect
-          this.otherQuery = this.getOtherQuery(query)
-        }
-      },
-      immediate: true
-    }
-  },
-  created() {
-    // window.addEventListener('storage', this.afterQRScan)
-  },
-  mounted() {
-    if (this.loginForm.username === '') {
-      this.$refs.username.focus()
-    } else if (this.loginForm.password === '') {
-      this.$refs.password.focus()
-    }
-    this.width = this.$refs.dragVerifySize.$el.clientWidth
-    this.height = this.$refs.username.$el.clientHeight
-
-    /* 当窗口改变触发*/
-    window.onresize = () => {
-      return (() => {
-        this.width = this.$refs.dragVerifySize.$el.clientWidth
-        this.height = this.$refs.username.$el.clientHeight
-      })()
-    }
-  },
-  destroyed() {
-    // window.removeEventListener('storage', this.afterQRScan)
-  },
-  methods: {
-    checkCapslock(e) {
-      const { key } = e
-      this.capsTooltip = key && key.length === 1 && (key >= 'A' && key <= 'Z')
-    },
-    showPwd() {
-      if (this.passwordType === 'password') {
-        this.passwordType = ''
-      } else {
-        this.passwordType = 'password'
-      }
-      this.$nextTick(() => {
-        this.$refs.password.focus()
-      })
-    },
-    handleLogin() {
-      /* 验证*/
-      this.$refs.loginForm.validate(valid => {
-        if (valid) {
-          if (!this.$refs.Verify.isPassing) { // 未通过验证
-            this.$message({
-              message: this.text + '进行验证',
-              type: 'warning'
-            })
-            return
-          }
-          this.loading = true
-          this.$store.dispatch('user/login', this.loginForm)
-            .then(() => {
-              this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
-              this.loading = false
-            })
-            .catch(() => {
-              this.loading = false
-            })
+  export default {
+    name: 'Login',
+    components: {LangSelect, SocialSign, DragVerify},
+    data() {
+      const validateUsername = (rule, value, callback) => {
+        if (!validUsername(value)) {
+          callback(new Error('Please enter the correct user name'))
         } else {
-          console.log('error submit!!')
-          return false
+          callback()
         }
-      })
+      }
+      const validatePassword = (rule, value, callback) => {
+        if (value.length < 6) {
+          callback(new Error('The password can not be less than 6 digits'))
+        } else {
+          callback()
+        }
+      }
+      return {
+        loginForm: {
+          username: 'admin',
+          password: '111111'
+        },
+        loginRules: {
+          username: [{required: true, trigger: 'blur', validator: validateUsername}],
+          password: [{required: true, trigger: 'blur', validator: validatePassword}]
+        },
+        passwordType: 'password',
+        capsTooltip: false,
+        loading: false,
+        showDialog: false,
+        redirect: undefined,
+        otherQuery: {},
+        //  以下为drag-verify配置
+        width: 1,
+        height: 1,
+        text: '请将滑块拖动到右侧',
+        successText: '验证成功',
+        background: '#DDDDDD',
+        progressBarBg: '#76C61D',
+        completedBg: '#76C61D',
+        handlerBg: 'white',
+        handlerIcon: 'el-icon-arrow-right',
+        textSize: '14',
+        successIcon: 'el-icon-circle-check',
+        getShape: false,
+        color: 'white',
+        borderRadius: '5px'
+      }
     },
-    getOtherQuery(query) {
-      return Object.keys(query).reduce((acc, cur) => {
-        if (cur !== 'redirect') {
-          acc[cur] = query[cur]
+    watch: {
+      $route: {
+        handler: function (route) {
+          const query = route.query
+          if (query) {
+            this.redirect = query.redirect
+            this.otherQuery = this.getOtherQuery(query)
+          }
+        },
+        immediate: true
+      }
+    },
+    created() {
+      // window.addEventListener('storage', this.afterQRScan)
+    },
+    mounted() {
+      if (this.loginForm.username === '') {
+        this.$refs.username.focus()
+      } else if (this.loginForm.password === '') {
+        this.$refs.password.focus()
+      }
+      this.width = this.$refs.dragVerifySize.$el.clientWidth
+      this.height = this.$refs.username.$el.clientHeight
+
+      /* 当窗口改变触发*/
+      window.onresize = () => {
+        return (() => {
+          this.width = this.$refs.dragVerifySize.$el.clientWidth
+          this.height = this.$refs.username.$el.clientHeight
+        })()
+      }
+    },
+    destroyed() {
+      // window.removeEventListener('storage', this.afterQRScan)
+    },
+    methods: {
+      checkCapslock(e) {
+        const {key} = e
+        this.capsTooltip = key && key.length === 1 && (key >= 'A' && key <= 'Z')
+      },
+      showPwd() {
+        if (this.passwordType === 'password') {
+          this.passwordType = ''
+        } else {
+          this.passwordType = 'password'
         }
-        return acc
-      }, {})
+        this.$nextTick(() => {
+          this.$refs.password.focus()
+        })
+      },
+      handleLogin() {
+        /* 验证*/
+        this.$refs.loginForm.validate(valid => {
+          if (valid) {
+            if (!this.$refs.Verify.isPassing) { // 未通过验证
+              this.$message({
+                message: this.text + '进行验证',
+                type: 'warning'
+              })
+              return
+            }
+            this.loading = true
+            this.$store.dispatch('user/login', this.loginForm)
+              .then(() => {
+                this.$router.push({path: this.redirect || '/', query: this.otherQuery})
+                this.loading = false
+              })
+              .catch(() => {
+                this.loading = false
+              })
+          } else {
+            console.log('error submit!!')
+            return false
+          }
+        })
+      },
+      getOtherQuery(query) {
+        return Object.keys(query).reduce((acc, cur) => {
+          if (cur !== 'redirect') {
+            acc[cur] = query[cur]
+          }
+          return acc
+        }, {})
+      }
+      // afterQRScan() {
+      //   if (e.key === 'x-admin-oauth-code') {
+      //     const code = getQueryObject(e.newValue)
+      //     const codeMap = {
+      //       wechat: 'code',
+      //       tencent: 'code'
+      //     }
+      //     const type = codeMap[this.auth_type]
+      //     const codeName = code[type]
+      //     if (codeName) {
+      //       this.$store.dispatch('LoginByThirdparty', codeName).then(() => {
+      //         this.$router.push({ path: this.redirect || '/' })
+      //       })
+      //     } else {
+      //       alert('第三方登录失败')
+      //     }
+      //   }
+      // }
     }
-    // afterQRScan() {
-    //   if (e.key === 'x-admin-oauth-code') {
-    //     const code = getQueryObject(e.newValue)
-    //     const codeMap = {
-    //       wechat: 'code',
-    //       tencent: 'code'
-    //     }
-    //     const type = codeMap[this.auth_type]
-    //     const codeName = code[type]
-    //     if (codeName) {
-    //       this.$store.dispatch('LoginByThirdparty', codeName).then(() => {
-    //         this.$router.push({ path: this.redirect || '/' })
-    //       })
-    //     } else {
-    //       alert('第三方登录失败')
-    //     }
-    //   }
-    // }
   }
-}
 </script>
 
 <style lang="scss">
